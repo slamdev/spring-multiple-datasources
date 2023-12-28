@@ -1,0 +1,37 @@
+logging:
+  level:
+    # disable cockroachdb warning about
+    # Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented
+    'com.zaxxer.hikari.pool.ProxyConnection': ERROR
+spring:
+  main:
+    banner-mode: off
+smd:
+  postgres:
+    datasource:
+      name: postgres
+      url: jdbc:postgresql://localhost:5432/smdpostgres
+      username: postgres
+      password: postgres
+    flyway:
+      locations: classpath:db/migration/postgres
+  cockroach:
+    datasource:
+      name: cockroach
+      url: jdbc:postgresql://localhost:26257/smdcockroach
+      username: root
+      password:
+    flyway:
+      locations: classpath:db/migration/cockroach
+  clickhouse:
+    datasource:
+      name: clickhouse
+      url: jdbc:clickhouse://localhost:8123/smdclickhouse?compress=0&databaseTerm=schema
+      username: clickhouse
+      password: clickhouse
+      driverClassName: com.clickhouse.jdbc.ClickHouseDriver
+    flyway:
+      locations: classpath:db/migration/clickhouse
+    jpa:
+      properties:
+        hibernate.dialect: org.hibernate.annotations.processing.GenericDialect

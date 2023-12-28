@@ -1,0 +1,37 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:16.1-alpine3.19
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=smdpostgres
+      - PGDATA=/opt/postgresql/pgdata
+    tmpfs:
+      - /opt/postgresql
+  cockroachdb:
+    image: cockroachdb/cockroach:v23.1.13
+    restart: on-failure
+    command: [ start-single-node, --insecure ]
+    ports:
+      - "26257:26257"
+    environment:
+      - COCKROACH_DATABASE=smdcockroach
+    tmpfs:
+      - /cockroach/cockroach-data
+  clickhouse:
+    image: clickhouse/clickhouse-server:23.12.1.1368-alpine
+    restart: on-failure
+    ports:
+      - "8123:8123"
+    environment:
+      - CLICKHOUSE_DB=smdclickhouse
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+      - CLICKHOUSE_USER=clickhouse
+      - CLICKHOUSE_PASSWORD=clickhouse
+    tmpfs:
+      - /var/lib/clickhouse
+      - /var/log/clickhouse-server

@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'org.springframework.boot' version '3.2.1'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.github.slamdev'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    // use forked version with clickhouse support instead of 'org.flywaydb:flyway-core'
+    // until https://github.com/flyway/flyway/pull/3611 is merged
+    // based on https://github.com/sazonov/flyway/tree/d9cbe15029718b4d75b8425d2a91c5ffe6a9e2c7
+    implementation ('com.github.sazonov:flyway:d9cbe15029') {
+//        exclude module: 'flyway-community-db-support'
+        exclude module: 'flyway-database-oracle'
+        exclude module: 'flyway-firebird'
+        exclude module: 'flyway-gcp-bigquery'
+        exclude module: 'flyway-gcp-spanner'
+        exclude module: 'flyway-gradle-plugin'
+        exclude module: 'flyway-maven-plugin'
+//        exclude module: 'flyway-mysql'
+        exclude module: 'flyway-sqlserver'
+        exclude module: 'flyway-commandline'
+    }
+    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'com.clickhouse:clickhouse-jdbc:0.5.0'
+    // needed by clickhouse driver
+    runtimeOnly 'org.apache.httpcomponents.client5:httpclient5'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
